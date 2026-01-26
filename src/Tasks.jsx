@@ -25,10 +25,18 @@ export default function Tasks(){
     })
 
     const [alignment, setAlignment] = useState('uncompleted');
-
+    const [taskState, setTaskState] = useState({
+        title: null,
+        subtitle: null
+    });
     const handleChange = (event, newAlignment) => {
         setAlignment(newAlignment);
     };
+
+    function addTask(){
+        localStorage.setItem("todos", JSON.stringify([taskState.title, taskState.subtitle]))
+        setTaskState({title:null, subtitle:null})
+    }
     
     return (
         <Container maxWidth="sm">
@@ -46,7 +54,7 @@ export default function Tasks(){
                     </ToggleButtonGroup>
                 </ThemeProvider>
 
-            <Container style={{margin: "20px auto", display: "flex", justifyContent: "center", flexDirection: "column", height: "10%", maxHeight:"700px" ,overflow: "scroll"}}>
+            <Container style={{margin: "20px auto", display: "flex", justifyContent: "space-around", flexDirection: "column", height: "60vh", overflowY: "scroll", borderBottom: "solid gray 1px"}}>
                 <List>hello</List>
                 <List>hello</List>
                 <List>hello</List>
@@ -57,10 +65,12 @@ export default function Tasks(){
             <Container>
                 <Grid container spacing={1} columns={12}>
                     <Grid size={3}>
-                        <Button style={{width: "100%", height: "100%"}} variant='contained'>إضافة</Button>
+                        <Button onClick={addTask} style={{width: "100%", height: "100%"}} variant='contained'>إضافة</Button>
                     </Grid>
                     <Grid size={9}>
-                        <TextField style={{width: "90%"}} id="outlined-basic" label="عنوان المهمة" variant="outlined" />
+                        <TextField onChange={(e)=>{
+                            setTaskState({...taskState, title:e.target.value})
+                        }} value={taskState.title} style={{width: "90%"}} id="outlined-basic" label="عنوان المهمة" variant="outlined" />
                     </Grid>
                 </Grid>
             </Container>
