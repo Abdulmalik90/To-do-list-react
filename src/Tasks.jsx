@@ -46,7 +46,7 @@ export default function Tasks(){
                     </ToggleButtonGroup>
                 </ThemeProvider>
 
-            <Container style={{margin: "20px auto", display: "flex", justifyContent: "center", flexDirection: "column", height: "10%", maxHeight:"700px" ,overflow: "scroll"}}>
+            <Container style={{margin: "20px auto", display: "flex", justifyContent: "center", flexDirection: "column", height: "60vh", paddingTop: "20px", maxHeight:"700px" ,overflow: "scroll"}}>
                 <List>hello</List>
                 <List>hello</List>
                 <List>hello</List>
