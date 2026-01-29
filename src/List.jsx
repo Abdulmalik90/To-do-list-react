@@ -6,29 +6,57 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import CheckIcon from '@mui/icons-material/Check';
 import { Container } from '@mui/material';
-export default function List({children}){
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import { Margin } from '@mui/icons-material';
+import { indigo } from '@mui/material/colors';
+export default function List({children, }){
     return (
         <Container maxWidth="sm">
-            <Card variant="outlined">
+            <Card variant="outlined" style={{marginBottom: "10px"}}>
                 <React.Fragment>
-                    <CardContent>
-                        <Typography gutterBottom sx={{ color: 'text.secondary', fontSize: 14 }}>
-                            Word of the Day
-                        </Typography>
-                        <Typography variant="h5" component="div">
+                    <CardContent sx={{ backgroundColor: indigo[900] , color: "white"}}>
+                        <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }} alignItems="center">
+                            <Grid size={6} style={{textAlign:"center"}}>
+                                
+                                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+                                    <Grid size={{ xs: 1, sm: 4, md: 4 }} style={{border:"solid red 1px", borderRadius: "20px", backgroundColor: "white"}}>
+                                        <IconButton aria-label="delete" size="small" color='error'>
+                                            <DeleteOutlineIcon fontSize="inherit" />
+                                        </IconButton>
+                                    </Grid>
+                                    <Grid size={{ xs: 1, sm: 4, md: 4 }} style={{border:"solid blue 1px", borderRadius: "20px", backgroundColor: "white"}}>
+                                        <IconButton aria-label="delete" size="small" color='primary'>
+                                            <EditOutlinedIcon fontSize="inherit" />
+                                        </IconButton>
+                                    </Grid>
+                                    <Grid size={{ xs: 1, sm: 4, md: 4 }} style={{border:"solid green 1px", borderRadius: "20px", backgroundColor: "white"}}>
+                                        <IconButton aria-label="delete" size="small" color='success'>
+                                            <CheckCircleOutlineIcon fontSize="inherit" />
+                                        </IconButton>
+                                    </Grid>
+                                </Grid>
+                                    
+                            </Grid>
+
+                            <Grid size={6}>
+                                <Typography variant="body2">
+                                    <h3 style={{direction: "rtl", textAlign: "right"}}>{children}</h3>
+                                    <p style={{direction: "rtl", textAlign: "right"}}></p>
+                                </Typography>
+                            </Grid>
                             
-                        </Typography>
-                        <Typography sx={{ color: 'text.secondary', mb: 1.5 }}>adjective</Typography>
-                        <Typography variant="body2">
-                            well meaning and kindly.
-                            <br />
-                            {'"a benevolent smile"'}
-                        </Typography>
+                        </Grid>
+                        
+                        
+                        
+                        
                     </CardContent>
 
-                    <CardActions>
-                        <Button size="small">Learn More</Button>
-                    </CardActions>
+                    
                 </React.Fragment>
             </Card>
         </Container>

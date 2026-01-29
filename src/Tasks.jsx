@@ -25,11 +25,40 @@ export default function Tasks(){
     })
 
     const [alignment, setAlignment] = useState('uncompleted');
-
+    const [taskState, setTaskState] = useState({
+        title: "",
+        subtitle: "",
+        allTasks: []
+    });
     const handleChange = (event, newAlignment) => {
         setAlignment(newAlignment);
     };
-    
+
+    // adding task button function
+    function addTask(){
+
+        const newTaskList = [
+            ...taskState.allTasks, {title: taskState.title, subtitle: taskState.subtitle, completed: false}
+        ]
+
+        localStorage.setItem("todos", JSON.stringify(newTaskList))
+        
+        setTaskState({
+            ...taskState,
+            title: "",
+            subtitle: "",
+            allTasks: newTaskList
+        })
+    }
+
+    // getting the tasks from the local storage
+    function getTasks(){
+        let items = localStorage.getItem("todos")
+        console.log(items)
+    }
+
+    getTasks()
+
     return (
         <Container maxWidth="sm">
             <ThemeProvider theme={theme}>
@@ -47,6 +76,11 @@ export default function Tasks(){
                 </ThemeProvider>
 
             <Container style={{margin: "20px auto", display: "flex", justifyContent: "center", flexDirection: "column", height: "60vh", paddingTop: "20px", maxHeight:"700px" ,overflow: "scroll"}}>
+                {taskState.allTasks.map((task, index)=>{
+                    return (
+                        <List key={index} subtitle={task.subtitle}>{task.title}</List>
+                    )
+                })}
                 <List>hello</List>
                 <List>hello</List>
                 <List>hello</List>
@@ -57,10 +91,12 @@ export default function Tasks(){
             <Container>
                 <Grid container spacing={1} columns={12}>
                     <Grid size={3}>
-                        <Button style={{width: "100%", height: "100%"}} variant='contained'>إضافة</Button>
+                        <Button onClick={addTask} style={{width: "100%", height: "100%"}} variant='contained'>إضافة</Button>
                     </Grid>
                     <Grid size={9}>
-                        <TextField style={{width: "90%"}} id="outlined-basic" label="عنوان المهمة" variant="outlined" />
+                        <TextField onChange={(e)=>{
+                            setTaskState({...taskState, title:e.target.value})
+                        }} value={taskState.title} style={{width: "90%"}} id="outlined-basic" className={""} label="عنوان المهمة" variant="outlined" />
                     </Grid>
                 </Grid>
             </Container>
