@@ -13,7 +13,13 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { Margin } from '@mui/icons-material';
 import { indigo } from '@mui/material/colors';
-export default function List({children, }){
+export default function List({children, subtitle, index, checkButton}){
+
+    function handleCheckButton(){
+        checkButton(index)
+    }
+
+    
     return (
         <Container maxWidth="sm">
             <Card variant="outlined" style={{marginBottom: "10px"}}>
@@ -29,8 +35,8 @@ export default function List({children, }){
                                         </IconButton>
                                     </Grid>
                                     <Grid size={{ xs: 1, sm: 4, md: 4 }} style={{border:"solid blue 1px", borderRadius: "20px", backgroundColor: "white"}}>
-                                        <IconButton aria-label="delete" size="small" color='primary'>
-                                            <EditOutlinedIcon fontSize="inherit" />
+                                        <IconButton onClick={handleCheckButton} aria-label="delete" size="small" color='primary'>
+                                            <EditOutlinedIcon fontSize="inherit"  />
                                         </IconButton>
                                     </Grid>
                                     <Grid size={{ xs: 1, sm: 4, md: 4 }} style={{border:"solid green 1px", borderRadius: "20px", backgroundColor: "white"}}>
@@ -45,7 +51,7 @@ export default function List({children, }){
                             <Grid size={6}>
                                 <Typography variant="body2">
                                     <h3 style={{direction: "rtl", textAlign: "right"}}>{children}</h3>
-                                    <p style={{direction: "rtl", textAlign: "right"}}></p>
+                                    <p style={{direction: "rtl", textAlign: "right"}}>{subtitle}</p>
                                 </Typography>
                             </Grid>
                             

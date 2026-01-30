@@ -4,7 +4,7 @@ import { Container } from '@mui/material'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { grey, red } from '@mui/material/colors';
 import List from './List';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Grid from '@mui/material/Grid';
@@ -28,7 +28,7 @@ export default function Tasks(){
     const [taskState, setTaskState] = useState({
         title: "",
         subtitle: "",
-        allTasks: []
+        allTasks: JSON.parse(localStorage.getItem("todos")) || []
     });
     const handleChange = (event, newAlignment) => {
         setAlignment(newAlignment);
@@ -52,12 +52,7 @@ export default function Tasks(){
     }
 
     // getting the tasks from the local storage
-    function getTasks(){
-        let items = localStorage.getItem("todos")
-        console.log(items)
-    }
-
-    getTasks()
+    
 
     return (
         <Container maxWidth="sm">
@@ -81,11 +76,7 @@ export default function Tasks(){
                         <List key={index} subtitle={task.subtitle}>{task.title}</List>
                     )
                 })}
-                <List>hello</List>
-                <List>hello</List>
-                <List>hello</List>
-                <List>hello</List>
-                <List>hello</List>
+                
             </Container>
 
             <Container>
