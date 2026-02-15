@@ -28,6 +28,7 @@ export default function Tasks(){
     const [taskState, setTaskState] = useState({
         title: "",
         subtitle: "",
+        completed: false,
         allTasks: JSON.parse(localStorage.getItem("todos")) || [] // getting the tasks from the local storage
     });
     const handleChange = (event, newAlignment) => {
@@ -90,8 +91,10 @@ export default function Tasks(){
 
             <Container style={{margin: "20px auto", display: "flex", justifyContent: "center", flexDirection: "column", height: "60vh", paddingTop: "20px", maxHeight:"700px" ,overflow: "scroll"}}>
                 {taskState.allTasks.map((task, index)=>{
+                    if(!task) return null;
+
                     return (
-                        <List checkButton={checkButton} key={index}  index={index} subtitle={task.subtitle}>{task.title}</List>
+                        <List checkButton={checkButton} key={index} isCompleted={task.completed} index={index} subtitle={task.subtitle}> {task.title}</List>
                     )
                 })}
                 

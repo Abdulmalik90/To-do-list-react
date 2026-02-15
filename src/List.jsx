@@ -14,20 +14,47 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { Margin } from '@mui/icons-material';
 import { indigo } from '@mui/material/colors';
-export default function List({children, subtitle, index, checkButton}){
+export default function List({children, subtitle, index, checkButton, isCompleted}){
 
     const [styleState, setStyleState] = useState({
         checkButton: {border:"solid green 1px", borderRadius: "20px", backgroundColor: "white"},
         editButton: {border:"solid blue 1px", borderRadius: "20px", backgroundColor: "white"},
         deleteButton: {border:"solid red 1px", borderRadius: "20px", backgroundColor: "white"}
     })
+    
     function handleCheckButton(){
-        checkButton(index)
+        checkButton(index);
+        
+        if (!isCompleted) {
+            setStyleState(prev => ({
+                ...prev,
+                checkButton: {...prev.checkButton, backgroundColor: "green", color: "white"}
+            }));
+        } else {
+            setStyleState(prev => ({
+                ...prev,
+                checkButton: {...prev.checkButton, backgroundColor: "white", color: "green"}
+            }));
+        }
     }
 
-    function changeCheckButtonStyle(){
+    function handleEditButton(){
+        checkButton(index);
         
+        if (!isCompleted) {
+            setStyleState(prev => ({
+                ...prev,
+                checkButton: {...prev.checkButton, backgroundColor: "green", color: "white"}
+            }));
+        } else {
+            setStyleState(prev => ({
+                ...prev,
+                checkButton: {...prev.checkButton, backgroundColor: "white", color: "green"}
+            }));
+        }
     }
+    
+
     return (
         <Container maxWidth="sm">
             <Card variant="outlined" style={{marginBottom: "10px"}}>
@@ -43,12 +70,12 @@ export default function List({children, subtitle, index, checkButton}){
                                         </IconButton>
                                     </Grid>
                                     <Grid size={{ xs: 1, sm: 4, md: 4 }} style={styleState.editButton}>
-                                        <IconButton onClick={handleCheckButton} aria-label="delete" size="small" color='primary'>
+                                        <IconButton onClick={handleEditButton} aria-label="delete" size="small" color='primary'>
                                             <EditOutlinedIcon fontSize="inherit"  />
                                         </IconButton>
                                     </Grid>
-                                    <Grid size={{ xs: 1, sm: 4, md: 4 }} style={styleState.checkButton}>
-                                        <IconButton aria-label="delete" size="small" color='success'>
+                                    <Grid size={{ xs: 1, sm: 4, md: 4 }}>
+                                        <IconButton style={styleState.checkButton} onClick={handleCheckButton} aria-label="delete" size="small" color='success'>
                                             <CheckCircleOutlineIcon fontSize="inherit" />
                                         </IconButton>
                                     </Grid>
