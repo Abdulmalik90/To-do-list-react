@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -15,11 +16,18 @@ import { Margin } from '@mui/icons-material';
 import { indigo } from '@mui/material/colors';
 export default function List({children, subtitle, index, checkButton}){
 
+    const [styleState, setStyleState] = useState({
+        checkButton: {border:"solid green 1px", borderRadius: "20px", backgroundColor: "white"},
+        editButton: {border:"solid blue 1px", borderRadius: "20px", backgroundColor: "white"},
+        deleteButton: {border:"solid red 1px", borderRadius: "20px", backgroundColor: "white"}
+    })
     function handleCheckButton(){
         checkButton(index)
     }
 
-    
+    function changeCheckButtonStyle(){
+        
+    }
     return (
         <Container maxWidth="sm">
             <Card variant="outlined" style={{marginBottom: "10px"}}>
@@ -29,17 +37,17 @@ export default function List({children, subtitle, index, checkButton}){
                             <Grid size={6} style={{textAlign:"center"}}>
                                 
                                 <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-                                    <Grid size={{ xs: 1, sm: 4, md: 4 }} style={{border:"solid red 1px", borderRadius: "20px", backgroundColor: "white"}}>
+                                    <Grid size={{ xs: 1, sm: 4, md: 4 }} style={styleState.deleteButton}>
                                         <IconButton aria-label="delete" size="small" color='error'>
                                             <DeleteOutlineIcon fontSize="inherit" />
                                         </IconButton>
                                     </Grid>
-                                    <Grid size={{ xs: 1, sm: 4, md: 4 }} style={{border:"solid blue 1px", borderRadius: "20px", backgroundColor: "white"}}>
+                                    <Grid size={{ xs: 1, sm: 4, md: 4 }} style={styleState.editButton}>
                                         <IconButton onClick={handleCheckButton} aria-label="delete" size="small" color='primary'>
                                             <EditOutlinedIcon fontSize="inherit"  />
                                         </IconButton>
                                     </Grid>
-                                    <Grid size={{ xs: 1, sm: 4, md: 4 }} style={{border:"solid green 1px", borderRadius: "20px", backgroundColor: "white"}}>
+                                    <Grid size={{ xs: 1, sm: 4, md: 4 }} style={styleState.checkButton}>
                                         <IconButton aria-label="delete" size="small" color='success'>
                                             <CheckCircleOutlineIcon fontSize="inherit" />
                                         </IconButton>

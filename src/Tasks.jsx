@@ -28,7 +28,7 @@ export default function Tasks(){
     const [taskState, setTaskState] = useState({
         title: "",
         subtitle: "",
-        allTasks: JSON.parse(localStorage.getItem("todos")) || []
+        allTasks: JSON.parse(localStorage.getItem("todos")) || [] // getting the tasks from the local storage
     });
     const handleChange = (event, newAlignment) => {
         setAlignment(newAlignment);
@@ -51,7 +51,25 @@ export default function Tasks(){
         })
     }
 
-    // getting the tasks from the local storage
+    function checkButton(id){
+        
+        setTaskState(prev => ({
+            ...prev, 
+            allTasks: prev.allTasks.map((task, i) => {
+                if(i === id){
+                    if(task.completed){
+                        return {...task, completed: false}
+                    } else{
+                        return {...task, completed: true}
+                    }
+                } else {
+                    return task;
+                }
+            })
+            
+        }))
+    }
+    
     
 
     return (
@@ -73,7 +91,7 @@ export default function Tasks(){
             <Container style={{margin: "20px auto", display: "flex", justifyContent: "center", flexDirection: "column", height: "60vh", paddingTop: "20px", maxHeight:"700px" ,overflow: "scroll"}}>
                 {taskState.allTasks.map((task, index)=>{
                     return (
-                        <List key={index} subtitle={task.subtitle}>{task.title}</List>
+                        <List checkButton={checkButton} key={index}  index={index} subtitle={task.subtitle}>{task.title}</List>
                     )
                 })}
                 
