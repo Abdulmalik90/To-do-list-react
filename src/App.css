@@ -1,6 +1,73 @@
+/* Custom Fonts */
+@font-face {
+  font-family: Alex-black;
+  src: url("/public/fonts/Alexandria-Black.ttf");
+}
+
+@font-face {
+  font-family: Alex-bold;
+  src: url("/public/fonts/Alexandria-Bold.ttf");
+}
+
+@font-face {
+  font-family: Alex-extra-bold;
+  src: url("/public/fonts/Alexandria-ExtraBold.ttf");
+}
+
+@font-face {
+  font-family: Alex-regular;
+  src: url("/public/fonts/Alexandria-Regular.ttf");
+}
+
+@font-face {
+  font-family: Alex-extra-light;
+  src: url("/public/fonts/Alexandria-ExtraLight.ttf");
+}
+
+@font-face {
+  font-family: Alex-light;
+  src: url("/public/fonts/Alexandria-Light.ttf");
+}
+
+@font-face {
+  font-family: Alex-medium;
+  src: url("/public/fonts/Alexandria-Medium.ttf");
+}
+
+@font-face {
+  font-family: Alex-semi-bold;
+  src: url("/public/fonts/Alexandria-SemiBold.ttf");
+}
+
+@font-face {
+  font-family: Alex-thin;
+  src: url("/public/fonts/Alexandria-Thin.ttf");
+}
+/* // Custom Fonts // */
+
+
 h1 {
   text-align: center;
   font-size: 6.2em;
   font-family: 'Courier New', Courier, monospace;
   
+}
+
+.iconButton {
+  transition: all 0.4s !important;
+}
+
+.iconButton:hover {
+  background-color: rgb(167, 167, 167) !important;
+  box-shadow: 0px 7px 7px rgba(0, 0, 0, 0.4) !important;
+}
+
+.todoCard {
+  transition: all 0.4s !important;
+}
+
+.todoCard:hover {
+  padding-top: 20px !important;
+  padding-bottom: 20px !important;
+  box-shadow: 0px 7px 7px rgba(0, 0, 0, 0.4) !important;
 }

@@ -18,8 +18,8 @@ export default function List({children, subtitle, index, checkButton, isComplete
 
     const [styleState, setStyleState] = useState({
         checkButton: {border:"solid green 1px", borderRadius: "20px", backgroundColor: "white"},
-        editButton: {border:"solid blue 1px", borderRadius: "20px", backgroundColor: "white"},
-        deleteButton: {border:"solid red 1px", borderRadius: "20px", backgroundColor: "white"}
+        editButton: {border:"solid blue 1px", borderRadius: "20px", backgroundColor: "white", width: "fit-content"},
+        deleteButton: {border:"solid red 1px", borderRadius: "20px", backgroundColor: "white", width: "fit-content"}
     })
     
     function handleCheckButton(){
@@ -29,22 +29,7 @@ export default function List({children, subtitle, index, checkButton, isComplete
             setStyleState(prev => ({
                 ...prev,
                 checkButton: {...prev.checkButton, backgroundColor: "green", color: "white"}
-            }));
-        } else {
-            setStyleState(prev => ({
-                ...prev,
-                checkButton: {...prev.checkButton, backgroundColor: "white", color: "green"}
-            }));
-        }
-    }
-
-    function handleEditButton(){
-        checkButton(index);
-        
-        if (!isCompleted) {
-            setStyleState(prev => ({
-                ...prev,
-                checkButton: {...prev.checkButton, backgroundColor: "green", color: "white"}
+                
             }));
         } else {
             setStyleState(prev => ({
@@ -54,31 +39,52 @@ export default function List({children, subtitle, index, checkButton, isComplete
         }
     }
     
+    
+
+    function handleEditButton(){
+        // checkButton(index);
+        
+        // if (!isCompleted) {
+        //     setStyleState(prev => ({
+        //         ...prev,
+        //         checkButton: {...prev.checkButton, backgroundColor: "green", color: "white"}
+        //     }));
+        // } else {
+        //     setStyleState(prev => ({
+        //         ...prev,
+        //         checkButton: {...prev.checkButton, backgroundColor: "white", color: "green"}
+        //     }));
+        // }
+    }
+    
 
     return (
         <Container maxWidth="sm">
-            <Card variant="outlined" style={{marginBottom: "10px"}}>
+            <Card sx={{ backgroundColor: indigo[900] , color: "white"}} className='todoCard'  variant="outlined" style={{marginBottom: "10px"}}>
                 <React.Fragment>
-                    <CardContent sx={{ backgroundColor: indigo[900] , color: "white"}}>
+                    <CardContent >
                         <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }} alignItems="center">
                             <Grid size={6} style={{textAlign:"center"}}>
                                 
                                 <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                                     <Grid size={{ xs: 1, sm: 4, md: 4 }} style={styleState.deleteButton}>
-                                        <IconButton aria-label="delete" size="small" color='error'>
+                                        <IconButton className="iconButton" aria-label="delete" size="small" color='error'>
                                             <DeleteOutlineIcon fontSize="inherit" />
                                         </IconButton>
                                     </Grid>
+
                                     <Grid size={{ xs: 1, sm: 4, md: 4 }} style={styleState.editButton}>
-                                        <IconButton onClick={handleEditButton} aria-label="delete" size="small" color='primary'>
+                                        <IconButton  className="iconButton" onClick={handleEditButton} aria-label="delete" size="small" color='primary'>
                                             <EditOutlinedIcon fontSize="inherit"  />
                                         </IconButton>
                                     </Grid>
-                                    <Grid size={{ xs: 1, sm: 4, md: 4 }}>
-                                        <IconButton style={styleState.checkButton} onClick={handleCheckButton} aria-label="delete" size="small" color='success'>
+
+                                    <Grid size={{ xs: 1, sm: 1, md: 4 }}>
+                                        <IconButton className="iconButton" style={styleState.checkButton} onClick={handleCheckButton} aria-label="delete" size="small" color='success'>
                                             <CheckCircleOutlineIcon fontSize="inherit" />
                                         </IconButton>
                                     </Grid>
+
                                 </Grid>
                                     
                             </Grid>
