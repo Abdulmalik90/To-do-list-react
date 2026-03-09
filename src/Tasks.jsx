@@ -144,29 +144,54 @@ export default function Tasks(){
                     </ThemeProvider>
 
                 <Container style={{margin: "20px auto", display: "flex", justifyContent: "flex-start", flexDirection: "column", height: "60vh", maxHeight:"700px" ,overflowY: "scroll"}}>
-                    {taskState.allTasks.map((task, index)=>{
-                        if(!task) return null;
+                    <AnimatePresence>
+                        {taskState.allTasks.map((task, index)=>{
+                            if(!task) return null;
 
-                        if(tasksCondition == "notCompleted"){
-                            if(!task.completed){
+                            if(tasksCondition == "notCompleted"){
+                                if(!task.completed){
+                                    return (
+                                        <motion.div
+                                            key={index}
+                                            initial={{ opacity: 0, x: -100 }}   /* Start 100px to the left and invisible */
+                                            animate={{ opacity: 1, x: 0 }}      /* Slide to normal position and fade in */
+                                            exit={{ opacity: 0, x: 100 }}       /* Slide 100px to the right and fade out on delete! */
+                                            transition={{ duration: 0.4 }}      /* Takes 0.4 seconds */
+                                        >
+                                            <List className="task" checkButton={checkButton} key={index} todo={task} index={index} editButton={editButton} deleteButton={deleteButton}/>
+                                        </motion.div>
+                                    )
+                                }
+                            } else if(tasksCondition == "completed"){
+                                if(task.completed){
+                                    return (
+                                        <motion.div
+                                            key={index}
+                                            initial={{ opacity: 0, x: -100 }}   /* Start 100px to the left and invisible */
+                                            animate={{ opacity: 1, x: 0 }}      /* Slide to normal position and fade in */
+                                            exit={{ opacity: 0, x: 100 }}       /* Slide 100px to the right and fade out on delete! */
+                                            transition={{ duration: 0.4 }}      /* Takes 0.4 seconds */
+                                        >
+                                            <List className="task" checkButton={checkButton} key={index} todo={task} index={index} editButton={editButton} deleteButton={deleteButton}/>
+                                        </motion.div>
+                                    )
+                                }
+                            } else {
+
                                 return (
-                                    <List className="task" checkButton={checkButton} key={index} todo={task} index={index} editButton={editButton} deleteButton={deleteButton}/>
+                                    <motion.div
+                                            key={index}
+                                            initial={{ opacity: 0, x: -100 }}   /* Start 100px to the left and invisible */
+                                            animate={{ opacity: 1, x: 0 }}      /* Slide to normal position and fade in */
+                                            exit={{ opacity: 0, x: 100 }}       /* Slide 100px to the right and fade out on delete! */
+                                            transition={{ duration: 0.4 }}      /* Takes 0.4 seconds */
+                                        >
+                                            <List className="task" checkButton={checkButton} key={index} todo={task} index={index} editButton={editButton} deleteButton={deleteButton}/>
+                                        </motion.div>
                                 )
                             }
-                        } else if(tasksCondition == "completed"){
-                            if(task.completed){
-                                return (
-                                    <List className="task" checkButton={checkButton} key={index} todo={task} index={index} editButton={editButton} deleteButton={deleteButton}/>
-                                )
-                            }
-                        } else {
-
-                            return (
-                                <List className="task" checkButton={checkButton} key={index} todo={task} index={index} editButton={editButton} deleteButton={deleteButton}/>
-                            )
-                        }
-                    })}
-                    
+                        })}
+                    </AnimatePresence>
                 </Container>
 
                 <Container>
