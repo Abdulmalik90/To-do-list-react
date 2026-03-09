@@ -59,10 +59,13 @@ export default function List({ index, checkButton, todo, editButton, deleteButto
     
     // Edit Button Function
     const [open, setOpen] = React.useState(false);
-
+    const [editedTask, setEditedTask] = useState({
+        title: todo.title,
+        subtitle: todo.subtitle
+    });
     
 
-    const handleClosEdit = () => {
+    const handleCloseEdit = () => {
         setOpen(false);
     };
 
@@ -70,14 +73,15 @@ export default function List({ index, checkButton, todo, editButton, deleteButto
         event.preventDefault();
         const formData = new FormData(event.currentTarget);
         const formJson = Object.fromEntries(formData.entries());
-        const email = formJson.email;
-        console.log(email);
-        handleClosEdit();
+        const title = formJson.title;
+        const subtitle = formJson.subtitle;
+        editButton(index, title, subtitle);
+        handleCloseEdit();
     };
 
     function handleEditButton(){
         setOpen(true);
-
+        // editButton(index);
         
         
         
@@ -138,9 +142,7 @@ export default function List({ index, checkButton, todo, editButton, deleteButto
 
             {/* Edit Modal */}
             <React.Fragment>
-                <Button variant="outlined" onClick={handleClickOpen}>
-                    Open form dialog
-                </Button>
+                
                 <Dialog style={{direction: "rtl"}} open={open} onClose={handleCloseEdit}>
                     <DialogTitle>تعديل المهمة</DialogTitle>
                     <DialogContent>
@@ -150,29 +152,37 @@ export default function List({ index, checkButton, todo, editButton, deleteButto
                         autoFocus
                         required
                         margin="dense"
-                        id="name"
-                        name="email"
+                        id="title"
+                        name="title"
                         label="العنوان الرئيسي "
-                        type="email"
+                        type="text"
                         fullWidth
                         variant="standard"
+                        value={editedTask.title}
+                        onChange={(e)=>{
+                            setEditedTask({...editedTask, title: e.target.value})
+                        }}
                         />
 
                         <TextField
                         autoFocus
                         required
                         margin="dense"
-                        id="name"
-                        name="email"
+                        id="subtitle"
+                        name="subtitle"
                         label="العنوان الفرعي"
-                        type="email"
+                        type="text"
                         fullWidth
                         variant="standard"
+                        value={editedTask.subtitle}
+                        onChange={(e)=>{
+                            setEditedTask({...editedTask, subtitle: e.target.value})
+                        }}
                         />
                     </form>
                     </DialogContent>
                     <DialogActions>
-                    <Button onClick={handleClosEdit}>إلغاء</Button>
+                    <Button onClick={handleCloseEdit}>إلغاء</Button>
                     <Button type="submit" form="subscription-form">
                         حفظ التعديلات
                     </Button>

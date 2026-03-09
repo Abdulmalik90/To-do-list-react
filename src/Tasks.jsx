@@ -93,9 +93,9 @@ export default function Tasks(){
         setTaskState(prev => {
             const updatedTasks = prev.allTasks.map((task, i) => {
                 if(i === id){
-                    if(task.completed){
-                        return {...task, title: newTitle, subtitle: newSubtitle}
-                    }
+                    
+                    return {...task, title: newTitle, subtitle: newSubtitle}
+                    
                 } else {
                     return task;
                 }
