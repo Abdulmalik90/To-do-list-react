@@ -80,13 +80,22 @@ export default function List({ index, checkButton, todo, editButton, deleteButto
     };
 
     function handleEditButton(){
-        setOpen(true);
-        // editButton(index);
-        
-        
-        
+        setOpen(true);       
     }
     
+    // Delete Button Function
+    const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
+
+    const handleOpenDeleteModal = () => {
+        setOpenDeleteModal(true);
+    };
+
+    const handleCloseDeleteModal = () => {
+        setOpenDeleteModal(false);
+    };
+    function handleDeleteButton(){
+        deleteButton(index);
+    }
 
     return (
         <Container maxWidth="sm">
@@ -99,7 +108,7 @@ export default function List({ index, checkButton, todo, editButton, deleteButto
                                 {/* Delete Button */}
                                 <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                                     <Grid size={{ xs: 1, sm: 4, md: 4 }} style={styleState.deleteButton}>
-                                        <IconButton className="iconButton" aria-label="delete" size="small" color='error'>
+                                        <IconButton className="iconButton" aria-label="delete" size="small" color='error' onClick={handleOpenDeleteModal}>
                                             <DeleteOutlineIcon fontSize="inherit" />
                                         </IconButton>
                                     </Grid>
@@ -166,7 +175,6 @@ export default function List({ index, checkButton, todo, editButton, deleteButto
 
                         <TextField
                         autoFocus
-                        required
                         margin="dense"
                         id="subtitle"
                         name="subtitle"
@@ -185,6 +193,33 @@ export default function List({ index, checkButton, todo, editButton, deleteButto
                     <Button onClick={handleCloseEdit}>إلغاء</Button>
                     <Button type="submit" form="subscription-form">
                         حفظ التعديلات
+                    </Button>
+                    </DialogActions>
+                </Dialog>
+            </React.Fragment>
+
+            {/* Delete Modal */}
+            <React.Fragment >
+                
+                <Dialog
+                    style={{direction: "rtl"}}
+                    open={openDeleteModal}
+                    onClose={handleCloseDeleteModal}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                    {"تأكيد حذف المهمة"}
+                    </DialogTitle>
+                    <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        هل أنت متأكد من حذف هذه المهمة؟ لا يمكنك التراجع عن هذا الإجراء.    
+                    </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                    <Button onClick={handleCloseDeleteModal}>إلغاء</Button>
+                    <Button onClick={handleDeleteButton} color='error' autoFocus>
+                        حذف المهمة
                     </Button>
                     </DialogActions>
                 </Dialog>

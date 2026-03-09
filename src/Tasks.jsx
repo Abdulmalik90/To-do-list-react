@@ -13,7 +13,7 @@ import Alert from '@mui/material/Alert';
 import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
 import CloseIcon from '@mui/icons-material/Close';
-
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Tasks(){
     const theme = createTheme({
@@ -67,6 +67,7 @@ export default function Tasks(){
         })
     }
 
+    // check button function
     function checkButton(id){
         
         setTaskState(prev => {
@@ -89,6 +90,7 @@ export default function Tasks(){
         })
     }
     
+    // edit button function
     function editButton(id, newTitle, newSubtitle){
         setTaskState(prev => {
             const updatedTasks = prev.allTasks.map((task, i) => {
@@ -108,6 +110,21 @@ export default function Tasks(){
         })
     }
 
+        // delete button function
+        function deleteButton(id){
+            setTaskState(prev => {
+            // Filter keeps everything where the index (i) does NOT equal the deleted id
+            const updatedTasks = prev.allTasks.filter((task, i) => i !== id);
+            
+            localStorage.setItem("todos", JSON.stringify(updatedTasks));
+            
+            return {
+                ...prev,
+                allTasks: updatedTasks
+            };
+    })
+    }
+
     return (
         <>
             <Container maxWidth="sm">
@@ -125,12 +142,12 @@ export default function Tasks(){
                         </ToggleButtonGroup>
                     </ThemeProvider>
 
-                <Container style={{margin: "20px auto", display: "flex", justifyContent: "flex-start", flexDirection: "column", height: "60vh", maxHeight:"700px" ,overflow: "scroll"}}>
+                <Container style={{margin: "20px auto", display: "flex", justifyContent: "flex-start", flexDirection: "column", height: "60vh", maxHeight:"700px" ,overflowY: "scroll"}}>
                     {taskState.allTasks.map((task, index)=>{
                         if(!task) return null;
 
                         return (
-                            <List checkButton={checkButton} key={index} todo={task} index={index} editButton={editButton}/>
+                            <List className="task" checkButton={checkButton} key={index} todo={task} index={index} editButton={editButton} deleteButton={deleteButton}/>
                         )
                     })}
                     
