@@ -14,18 +14,36 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { Margin } from '@mui/icons-material';
 import { indigo } from '@mui/material/colors';
-export default function List({children, subtitle, index, checkButton, isCompleted}){
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+export default function List({ index, checkButton, todo, editButton, deleteButton }) {
+
+    function handleCheckButtonOnLoad(){
+        
+
+        if (todo.completed) {
+            return {border:"solid green 1px", borderRadius: "20px", backgroundColor: "green", color: "white"};
+        } else {
+            return {border:"solid green 1px", borderRadius: "20px", backgroundColor: "white", color: "green"};
+        }
+    }
 
     const [styleState, setStyleState] = useState({
-        checkButton: {border:"solid green 1px", borderRadius: "20px", backgroundColor: "white"},
+        checkButton: handleCheckButtonOnLoad(),
         editButton: {border:"solid blue 1px", borderRadius: "20px", backgroundColor: "white", width: "fit-content"},
         deleteButton: {border:"solid red 1px", borderRadius: "20px", backgroundColor: "white", width: "fit-content"}
     })
+
     
+
     function handleCheckButton(){
         checkButton(index);
         
-        if (!isCompleted) {
+        if (!todo.completed) {
             setStyleState(prev => ({
                 ...prev,
                 checkButton: {...prev.checkButton, backgroundColor: "green", color: "white"}
@@ -39,22 +57,30 @@ export default function List({children, subtitle, index, checkButton, isComplete
         }
     }
     
+    // Edit Button Function
+    const [open, setOpen] = React.useState(false);
+
     
 
+    const handleClosEdit = () => {
+        setOpen(false);
+    };
+
+    const handleSubmitEdit = (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        const formJson = Object.fromEntries(formData.entries());
+        const email = formJson.email;
+        console.log(email);
+        handleClosEdit();
+    };
+
     function handleEditButton(){
-        // checkButton(index);
+        setOpen(true);
+
         
-        // if (!isCompleted) {
-        //     setStyleState(prev => ({
-        //         ...prev,
-        //         checkButton: {...prev.checkButton, backgroundColor: "green", color: "white"}
-        //     }));
-        // } else {
-        //     setStyleState(prev => ({
-        //         ...prev,
-        //         checkButton: {...prev.checkButton, backgroundColor: "white", color: "green"}
-        //     }));
-        // }
+        
+        
     }
     
 
@@ -65,7 +91,8 @@ export default function List({children, subtitle, index, checkButton, isComplete
                     <CardContent >
                         <Grid container columnSpacing={{ xs: 1, sm: 2, md: 3 }} alignItems="center">
                             <Grid size={6} style={{textAlign:"center"}}>
-                                
+
+                                {/* Delete Button */}
                                 <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
                                     <Grid size={{ xs: 1, sm: 4, md: 4 }} style={styleState.deleteButton}>
                                         <IconButton className="iconButton" aria-label="delete" size="small" color='error'>
@@ -73,12 +100,14 @@ export default function List({children, subtitle, index, checkButton, isComplete
                                         </IconButton>
                                     </Grid>
 
+                                    {/* Edit Button */}
                                     <Grid size={{ xs: 1, sm: 4, md: 4 }} style={styleState.editButton}>
                                         <IconButton  className="iconButton" onClick={handleEditButton} aria-label="delete" size="small" color='primary'>
                                             <EditOutlinedIcon fontSize="inherit"  />
                                         </IconButton>
                                     </Grid>
 
+                                    {/* Check Button */}
                                     <Grid size={{ xs: 1, sm: 1, md: 4 }}>
                                         <IconButton className="iconButton" style={styleState.checkButton} onClick={handleCheckButton} aria-label="delete" size="small" color='success'>
                                             <CheckCircleOutlineIcon fontSize="inherit" />
@@ -91,8 +120,8 @@ export default function List({children, subtitle, index, checkButton, isComplete
 
                             <Grid size={6}>
                                 <Typography variant="body2">
-                                    <h3 style={{direction: "rtl", textAlign: "right"}}>{children}</h3>
-                                    <p style={{direction: "rtl", textAlign: "right"}}>{subtitle}</p>
+                                    <h3 style={{direction: "rtl", textAlign: "right"}}>{todo.title}</h3>
+                                    <p style={{direction: "rtl", textAlign: "right"}}>{todo.subtitle}</p>
                                 </Typography>
                             </Grid>
                             
@@ -106,6 +135,50 @@ export default function List({children, subtitle, index, checkButton, isComplete
                     
                 </React.Fragment>
             </Card>
+
+            {/* Edit Modal */}
+            <React.Fragment>
+                <Button variant="outlined" onClick={handleClickOpen}>
+                    Open form dialog
+                </Button>
+                <Dialog style={{direction: "rtl"}} open={open} onClose={handleCloseEdit}>
+                    <DialogTitle>تعديل المهمة</DialogTitle>
+                    <DialogContent>
+                    
+                    <form onSubmit={handleSubmitEdit} id="subscription-form">
+                        <TextField
+                        autoFocus
+                        required
+                        margin="dense"
+                        id="name"
+                        name="email"
+                        label="العنوان الرئيسي "
+                        type="email"
+                        fullWidth
+                        variant="standard"
+                        />
+
+                        <TextField
+                        autoFocus
+                        required
+                        margin="dense"
+                        id="name"
+                        name="email"
+                        label="العنوان الفرعي"
+                        type="email"
+                        fullWidth
+                        variant="standard"
+                        />
+                    </form>
+                    </DialogContent>
+                    <DialogActions>
+                    <Button onClick={handleClosEdit}>إلغاء</Button>
+                    <Button type="submit" form="subscription-form">
+                        حفظ التعديلات
+                    </Button>
+                    </DialogActions>
+                </Dialog>
+            </React.Fragment>
         </Container>
     )
 }
