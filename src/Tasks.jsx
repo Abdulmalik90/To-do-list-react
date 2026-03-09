@@ -125,7 +125,7 @@ export default function Tasks(){
                         </ToggleButtonGroup>
                     </ThemeProvider>
 
-                <Container style={{margin: "20px auto", display: "flex", justifyContent: "center", flexDirection: "column", height: "60vh", paddingTop: "300px", maxHeight:"700px" ,overflow: "scroll"}}>
+                <Container style={{margin: "20px auto", display: "flex", justifyContent: "flex-start", flexDirection: "column", height: "60vh", maxHeight:"700px" ,overflow: "scroll"}}>
                     {taskState.allTasks.map((task, index)=>{
                         if(!task) return null;
 
