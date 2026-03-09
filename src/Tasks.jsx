@@ -28,6 +28,7 @@ export default function Tasks(){
         }
     })
 
+    const [tasksCondition, setTasksCondition] = useState("notCompleted");
     const [open, setOpen] = useState(false);
     const [alignment, setAlignment] = useState('uncompleted');
     const [taskState, setTaskState] = useState({
@@ -136,9 +137,9 @@ export default function Tasks(){
                         onChange={handleChange}
                         aria-label="Platform"
                         >
-                        <ToggleButton value="uncompleted">غير منجز</ToggleButton>
-                        <ToggleButton value="completed">منجز</ToggleButton>
-                        <ToggleButton value="all">الكل</ToggleButton>
+                        <ToggleButton value="uncompleted" onClick={() => {setTasksCondition("notCompleted")}}>غير منجز</ToggleButton>
+                        <ToggleButton value="completed" onClick={() => {setTasksCondition("completed")}}>منجز</ToggleButton>
+                        <ToggleButton value="all" onClick={() => {setTasksCondition("allTasks")}}>الكل</ToggleButton>
                         </ToggleButtonGroup>
                     </ThemeProvider>
 
@@ -146,9 +147,24 @@ export default function Tasks(){
                     {taskState.allTasks.map((task, index)=>{
                         if(!task) return null;
 
-                        return (
-                            <List className="task" checkButton={checkButton} key={index} todo={task} index={index} editButton={editButton} deleteButton={deleteButton}/>
-                        )
+                        if(tasksCondition == "notCompleted"){
+                            if(!task.completed){
+                                return (
+                                    <List className="task" checkButton={checkButton} key={index} todo={task} index={index} editButton={editButton} deleteButton={deleteButton}/>
+                                )
+                            }
+                        } else if(tasksCondition == "completed"){
+                            if(task.completed){
+                                return (
+                                    <List className="task" checkButton={checkButton} key={index} todo={task} index={index} editButton={editButton} deleteButton={deleteButton}/>
+                                )
+                            }
+                        } else {
+
+                            return (
+                                <List className="task" checkButton={checkButton} key={index} todo={task} index={index} editButton={editButton} deleteButton={deleteButton}/>
+                            )
+                        }
                     })}
                     
                 </Container>
