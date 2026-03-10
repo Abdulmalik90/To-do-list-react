@@ -4,7 +4,7 @@ import { Container } from '@mui/material'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { grey, red } from '@mui/material/colors';
 import List from './List';
-import { useEffect, useState } from 'react';
+import { useState, useMemo } from 'react';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Grid from '@mui/material/Grid';
@@ -145,52 +145,56 @@ export default function Tasks(){
 
                 <Container style={{margin: "20px auto", display: "flex", justifyContent: "flex-start", flexDirection: "column", maxHeight: "60vh" ,overflowY: "scroll", overflowX: "hidden"}}>
                     <AnimatePresence>
-                        {taskState.allTasks.map((task, index)=>{
-                            if(!task) return null;
+                        {
+                        useMemo(()=>{
+                            return taskState.allTasks.map((task, index)=>{
+                                if(!task) return null;
 
-                            if(tasksCondition == "notCompleted"){
-                                if(!task.completed){
+                                if(tasksCondition == "notCompleted"){
+                                    if(!task.completed){
+                                        return (
+                                            <motion.div
+                                                key={index}
+                                                initial={{ opacity: 0, x: -100 }}   /* Start 100px to the left and invisible */
+                                                animate={{ opacity: 1, x: 0 }}      /* Slide to normal position and fade in */
+                                                exit={{ opacity: 0, x: 100 }}       /* Slide 100px to the right and fade out on delete! */
+                                                transition={{ duration: 0.4 }}      /* Takes 0.4 seconds */
+                                            >
+                                                <List className="task" checkButton={checkButton} key={index} todo={task} index={index} editButton={editButton} deleteButton={deleteButton}/>
+                                            </motion.div>
+                                        )
+                                    }
+                                } else if(tasksCondition == "completed"){
+                                    if(task.completed){
+                                        return (
+                                            <motion.div
+                                                key={index}
+                                                initial={{ opacity: 0, x: -100 }}   /* Start 100px to the left and invisible */
+                                                animate={{ opacity: 1, x: 0 }}      /* Slide to normal position and fade in */
+                                                exit={{ opacity: 0, x: 100 }}       /* Slide 100px to the right and fade out on delete! */
+                                                transition={{ duration: 0.4 }}      /* Takes 0.4 seconds */
+                                            >
+                                                <List className="task" checkButton={checkButton} key={index} todo={task} index={index} editButton={editButton} deleteButton={deleteButton}/>
+                                            </motion.div>
+                                        )
+                                    }
+                                } else {
+
                                     return (
                                         <motion.div
-                                            key={index}
-                                            initial={{ opacity: 0, x: -100 }}   /* Start 100px to the left and invisible */
-                                            animate={{ opacity: 1, x: 0 }}      /* Slide to normal position and fade in */
-                                            exit={{ opacity: 0, x: 100 }}       /* Slide 100px to the right and fade out on delete! */
-                                            transition={{ duration: 0.4 }}      /* Takes 0.4 seconds */
-                                        >
-                                            <List className="task" checkButton={checkButton} key={index} todo={task} index={index} editButton={editButton} deleteButton={deleteButton}/>
-                                        </motion.div>
+                                                key={index}
+                                                initial={{ opacity: 0, x: -100 }}   /* Start 100px to the left and invisible */
+                                                animate={{ opacity: 1, x: 0 }}      /* Slide to normal position and fade in */
+                                                exit={{ opacity: 0, x: 100 }}       /* Slide 100px to the right and fade out on delete! */
+                                                transition={{ duration: 0.4 }}      /* Takes 0.4 seconds */
+                                            >
+                                                <List className="task" checkButton={checkButton} key={index} todo={task} index={index} editButton={editButton} deleteButton={deleteButton}/>
+                                            </motion.div>
                                     )
                                 }
-                            } else if(tasksCondition == "completed"){
-                                if(task.completed){
-                                    return (
-                                        <motion.div
-                                            key={index}
-                                            initial={{ opacity: 0, x: -100 }}   /* Start 100px to the left and invisible */
-                                            animate={{ opacity: 1, x: 0 }}      /* Slide to normal position and fade in */
-                                            exit={{ opacity: 0, x: 100 }}       /* Slide 100px to the right and fade out on delete! */
-                                            transition={{ duration: 0.4 }}      /* Takes 0.4 seconds */
-                                        >
-                                            <List className="task" checkButton={checkButton} key={index} todo={task} index={index} editButton={editButton} deleteButton={deleteButton}/>
-                                        </motion.div>
-                                    )
-                                }
-                            } else {
-
-                                return (
-                                    <motion.div
-                                            key={index}
-                                            initial={{ opacity: 0, x: -100 }}   /* Start 100px to the left and invisible */
-                                            animate={{ opacity: 1, x: 0 }}      /* Slide to normal position and fade in */
-                                            exit={{ opacity: 0, x: 100 }}       /* Slide 100px to the right and fade out on delete! */
-                                            transition={{ duration: 0.4 }}      /* Takes 0.4 seconds */
-                                        >
-                                            <List className="task" checkButton={checkButton} key={index} todo={task} index={index} editButton={editButton} deleteButton={deleteButton}/>
-                                        </motion.div>
-                                )
-                            }
-                        })}
+                            })
+                        
+                        }, [tasksCondition, taskState.allTasks])}
                     </AnimatePresence>
                 </Container>
 
