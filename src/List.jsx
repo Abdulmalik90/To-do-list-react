@@ -95,6 +95,7 @@ export default function List({ index, checkButton, todo, editButton, deleteButto
     };
     function handleDeleteButton(){
         deleteButton(index);
+        handleCloseDeleteModal();
     }
 
     return (

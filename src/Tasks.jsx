@@ -143,7 +143,7 @@ export default function Tasks(){
                         </ToggleButtonGroup>
                     </ThemeProvider>
 
-                <Container style={{margin: "20px auto", display: "flex", justifyContent: "flex-start", flexDirection: "column", height: "60vh", maxHeight:"700px" ,overflowY: "scroll"}}>
+                <Container style={{margin: "20px auto", display: "flex", justifyContent: "flex-start", flexDirection: "column", maxHeight: "60vh" ,overflowY: "scroll", overflowX: "hidden"}}>
                     <AnimatePresence>
                         {taskState.allTasks.map((task, index)=>{
                             if(!task) return null;
