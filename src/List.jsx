@@ -14,12 +14,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { Margin } from '@mui/icons-material';
 import { indigo } from '@mui/material/colors';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+
 export default function List({ index, checkButton, todo, editButton, deleteButton }) {
 
     function handleCheckButtonOnLoad(){
@@ -57,45 +52,17 @@ export default function List({ index, checkButton, todo, editButton, deleteButto
         }
     }
     
-    // Edit Button Function
-    const [open, setOpen] = React.useState(false);
-    const [editedTask, setEditedTask] = useState({
-        title: todo.title,
-        subtitle: todo.subtitle
-    });
     
 
-    const handleCloseEdit = () => {
-        setOpen(false);
-    };
 
-    const handleSubmitEdit = (event) => {
-        event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-        const formJson = Object.fromEntries(formData.entries());
-        const title = formJson.title;
-        const subtitle = formJson.subtitle;
-        editButton(index, title, subtitle);
-        handleCloseEdit();
-    };
-
-    function handleEditButton(){
-        setOpen(true);       
+    // delete modal functoins
+    function handleOpenDeleteModal(){
+        deleteButton(todo);
     }
-    
-    // Delete Button Function
-    const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
 
-    const handleOpenDeleteModal = () => {
-        setOpenDeleteModal(true);
-    };
-
-    const handleCloseDeleteModal = () => {
-        setOpenDeleteModal(false);
-    };
-    function handleDeleteButton(){
-        deleteButton(index);
-        handleCloseDeleteModal();
+    // edit modal functoins
+    function handleOpenEditModal() {
+        editButton(todo)
     }
 
     return (
@@ -116,7 +83,7 @@ export default function List({ index, checkButton, todo, editButton, deleteButto
 
                                     {/* Edit Button */}
                                     <Grid size={{ xs: 1, sm: 4, md: 4 }} style={styleState.editButton}>
-                                        <IconButton  className="iconButton" onClick={handleEditButton} aria-label="delete" size="small" color='primary'>
+                                        <IconButton  className="iconButton"  aria-label="delete" size="small" color='primary' onClick={handleOpenEditModal}>
                                             <EditOutlinedIcon fontSize="inherit"  />
                                         </IconButton>
                                     </Grid>
@@ -150,81 +117,9 @@ export default function List({ index, checkButton, todo, editButton, deleteButto
                 </React.Fragment>
             </Card>
 
-            {/* Edit Modal */}
-            <React.Fragment>
-                
-                <Dialog style={{direction: "rtl"}} open={open} onClose={handleCloseEdit}>
-                    <DialogTitle>تعديل المهمة</DialogTitle>
-                    <DialogContent>
-                    
-                    <form onSubmit={handleSubmitEdit} id="subscription-form">
-                        <TextField
-                        autoFocus
-                        required
-                        margin="dense"
-                        id="title"
-                        name="title"
-                        label="العنوان الرئيسي "
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        value={editedTask.title}
-                        onChange={(e)=>{
-                            setEditedTask({...editedTask, title: e.target.value})
-                        }}
-                        />
+            
 
-                        <TextField
-                        autoFocus
-                        margin="dense"
-                        id="subtitle"
-                        name="subtitle"
-                        label="العنوان الفرعي"
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                        value={editedTask.subtitle}
-                        onChange={(e)=>{
-                            setEditedTask({...editedTask, subtitle: e.target.value})
-                        }}
-                        />
-                    </form>
-                    </DialogContent>
-                    <DialogActions>
-                    <Button onClick={handleCloseEdit}>إلغاء</Button>
-                    <Button type="submit" form="subscription-form">
-                        حفظ التعديلات
-                    </Button>
-                    </DialogActions>
-                </Dialog>
-            </React.Fragment>
-
-            {/* Delete Modal */}
-            <React.Fragment >
-                
-                <Dialog
-                    style={{direction: "rtl"}}
-                    open={openDeleteModal}
-                    onClose={handleCloseDeleteModal}
-                    aria-labelledby="alert-dialog-title"
-                    aria-describedby="alert-dialog-description"
-                >
-                    <DialogTitle id="alert-dialog-title">
-                    {"تأكيد حذف المهمة"}
-                    </DialogTitle>
-                    <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        هل أنت متأكد من حذف هذه المهمة؟ لا يمكنك التراجع عن هذا الإجراء.    
-                    </DialogContentText>
-                    </DialogContent>
-                    <DialogActions>
-                    <Button onClick={handleCloseDeleteModal}>إلغاء</Button>
-                    <Button onClick={handleDeleteButton} color='error' autoFocus>
-                        حذف المهمة
-                    </Button>
-                    </DialogActions>
-                </Dialog>
-            </React.Fragment>
+            
         </Container>
     )
 }

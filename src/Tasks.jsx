@@ -4,7 +4,7 @@ import { Container } from '@mui/material'
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { grey, red } from '@mui/material/colors';
 import List from './List';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Grid from '@mui/material/Grid';
@@ -13,7 +13,14 @@ import Alert from '@mui/material/Alert';
 import IconButton from '@mui/material/IconButton';
 import Collapse from '@mui/material/Collapse';
 import CloseIcon from '@mui/icons-material/Close';
+// eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
+// Dialog Imports
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 export default function Tasks(){
     const theme = createTheme({
@@ -34,12 +41,15 @@ export default function Tasks(){
     const [taskState, setTaskState] = useState({
         title: "",
         subtitle: "",
+        id: null,
         completed: false,
         allTasks: JSON.parse(localStorage.getItem("todos")) || [] // getting the tasks from the local storage
     });
     const handleChange = (event, newAlignment) => {
         setAlignment(newAlignment);
     };
+
+    
 
     // adding task button function
     function addTask(){
@@ -55,7 +65,7 @@ export default function Tasks(){
         };
 
         const newTaskList = [
-            ...taskState.allTasks, {title: taskState.title, subtitle: taskState.subtitle, completed: false}
+            ...taskState.allTasks, {title: taskState.title, subtitle: taskState.subtitle, id: Date.now(),completed: false}
         ]
 
         localStorage.setItem("todos", JSON.stringify(newTaskList))
@@ -69,6 +79,7 @@ export default function Tasks(){
     }
 
     // check button function
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     function checkButton(id){
         
         setTaskState(prev => {
@@ -94,8 +105,8 @@ export default function Tasks(){
     // edit button function
     function editButton(id, newTitle, newSubtitle){
         setTaskState(prev => {
-            const updatedTasks = prev.allTasks.map((task, i) => {
-                if(i === id){
+            const updatedTasks = prev.allTasks.map((task) => {
+                if(task.id === id){
                     
                     return {...task, title: newTitle, subtitle: newSubtitle}
                     
@@ -111,20 +122,115 @@ export default function Tasks(){
         })
     }
 
-        // delete button function
-        function deleteButton(id){
-            setTaskState(prev => {
+    // Edit Button Function
+    const [openEdit, setOpenEdit] = useState(false);
+    const [editedTask, setEditedTask] = useState({
+        title: taskState.title,
+        subtitle: taskState.subtitle
+    });
+    
+
+    const handleCloseEdit = () => {
+        setOpenEdit(false);
+    };
+
+    const handleSubmitEdit = (event) => {
+        event.preventDefault();
+        const formData = new FormData(event.currentTarget);
+        const formJson = Object.fromEntries(formData.entries());
+        const title = formJson.title;
+        const subtitle = formJson.subtitle;
+        editButton(taskState.id, title, subtitle);
+        handleCloseEdit();
+    };
+
+    const handleEditButton = useCallback((todo) => {
+        setTaskState(prev => ({...prev, title: todo.title, subtitle: todo.subtitle, id: todo.id}));
+        setEditedTask({title: todo.title, subtitle: todo.subtitle});
+        setOpenEdit(true);       
+    }, []);
+
+    // delete button function
+    function deleteButton(id){
+        setTaskState(prev => {
             // Filter keeps everything where the index (i) does NOT equal the deleted id
-            const updatedTasks = prev.allTasks.filter((task, i) => i !== id);
+            const updatedTasks = prev.allTasks.filter((task) => task.id !== id);
             
             localStorage.setItem("todos", JSON.stringify(updatedTasks));
             
             return {
                 ...prev,
-                allTasks: updatedTasks
+                allTasks: updatedTasks,
+                id: null
             };
-    })
+        })
     }
+
+    // Delete Button Function
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+
+    const handleOpenDeleteModal = useCallback((todo) => {
+        setTaskState(prev => ({ ...prev, id: todo.id }));
+        setOpenDeleteModal(true);
+    }, []);
+
+    const handleCloseDeleteModal = () => {
+        setOpenDeleteModal(false);
+    };
+    function handleDeleteButton(){
+        deleteButton(taskState.id);
+        handleCloseDeleteModal();
+    }
+
+    // Memoize the task list rendering
+    const memoizedTaskList = useMemo(() => {
+        return taskState.allTasks.map((task, index) => {
+            if (!task) return null;
+
+            if (tasksCondition === "notCompleted") {
+                if (!task.completed) {
+                    return (
+                        <motion.div
+                            key={index}
+                            initial={{ opacity: 0, x: -100 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: 100 }}
+                            transition={{ duration: 0.4 }}
+                        >
+                            <List className="task" checkButton={checkButton} key={task.id} todo={task} index={index} editButton={handleEditButton} deleteButton={handleOpenDeleteModal} />
+                        </motion.div>
+                    );
+                }
+            } else if (tasksCondition === "completed") {
+                if (task.completed) {
+                    return (
+                        <motion.div
+                            key={index}
+                            initial={{ opacity: 0, x: -100 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0, x: 100 }}
+                            transition={{ duration: 0.4 }}
+                        >
+                            <List className="task" checkButton={checkButton} key={task.id} todo={task} index={index} editButton={handleEditButton} deleteButton={handleOpenDeleteModal} />
+                        </motion.div>
+                    );
+                }
+            } else {
+                return (
+                    <motion.div
+                        key={index}
+                        initial={{ opacity: 0, x: -100 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 100 }}
+                        transition={{ duration: 0.4 }}
+                    >
+                        <List className="task" checkButton={checkButton} key={task.id} todo={task} index={index} editButton={handleEditButton} deleteButton={handleOpenDeleteModal} />
+                    </motion.div>
+                );
+            }
+            return null;
+        });
+    }, [tasksCondition, taskState.allTasks, checkButton, handleEditButton, handleOpenDeleteModal]);
 
     return (
         <>
@@ -145,56 +251,7 @@ export default function Tasks(){
 
                 <Container style={{margin: "20px auto", display: "flex", justifyContent: "flex-start", flexDirection: "column", maxHeight: "60vh" ,overflowY: "scroll", overflowX: "hidden"}}>
                     <AnimatePresence>
-                        {
-                        useMemo(()=>{
-                            return taskState.allTasks.map((task, index)=>{
-                                if(!task) return null;
-
-                                if(tasksCondition == "notCompleted"){
-                                    if(!task.completed){
-                                        return (
-                                            <motion.div
-                                                key={index}
-                                                initial={{ opacity: 0, x: -100 }}   /* Start 100px to the left and invisible */
-                                                animate={{ opacity: 1, x: 0 }}      /* Slide to normal position and fade in */
-                                                exit={{ opacity: 0, x: 100 }}       /* Slide 100px to the right and fade out on delete! */
-                                                transition={{ duration: 0.4 }}      /* Takes 0.4 seconds */
-                                            >
-                                                <List className="task" checkButton={checkButton} key={index} todo={task} index={index} editButton={editButton} deleteButton={deleteButton}/>
-                                            </motion.div>
-                                        )
-                                    }
-                                } else if(tasksCondition == "completed"){
-                                    if(task.completed){
-                                        return (
-                                            <motion.div
-                                                key={index}
-                                                initial={{ opacity: 0, x: -100 }}   /* Start 100px to the left and invisible */
-                                                animate={{ opacity: 1, x: 0 }}      /* Slide to normal position and fade in */
-                                                exit={{ opacity: 0, x: 100 }}       /* Slide 100px to the right and fade out on delete! */
-                                                transition={{ duration: 0.4 }}      /* Takes 0.4 seconds */
-                                            >
-                                                <List className="task" checkButton={checkButton} key={index} todo={task} index={index} editButton={editButton} deleteButton={deleteButton}/>
-                                            </motion.div>
-                                        )
-                                    }
-                                } else {
-
-                                    return (
-                                        <motion.div
-                                                key={index}
-                                                initial={{ opacity: 0, x: -100 }}   /* Start 100px to the left and invisible */
-                                                animate={{ opacity: 1, x: 0 }}      /* Slide to normal position and fade in */
-                                                exit={{ opacity: 0, x: 100 }}       /* Slide 100px to the right and fade out on delete! */
-                                                transition={{ duration: 0.4 }}      /* Takes 0.4 seconds */
-                                            >
-                                                <List className="task" checkButton={checkButton} key={index} todo={task} index={index} editButton={editButton} deleteButton={deleteButton}/>
-                                            </motion.div>
-                                    )
-                                }
-                            })
-                        
-                        }, [tasksCondition, taskState.allTasks])}
+                        {memoizedTaskList}
                     </AnimatePresence>
                 </Container>
 
@@ -233,6 +290,82 @@ export default function Tasks(){
                 يرجى إدخال عنوان المهمة قبل إضافتها
                 </Alert>
             </Collapse>
+
+            {/* Delete Modal */}
+            <>
+                
+                <Dialog
+                    style={{direction: "rtl"}}
+                    open={openDeleteModal}
+                    onClose={handleCloseDeleteModal}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                >
+                    <DialogTitle id="alert-dialog-title">
+                    {"تأكيد حذف المهمة"}
+                    </DialogTitle>
+                    <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        هل أنت متأكد من حذف هذه المهمة؟ لا يمكنك التراجع عن هذا الإجراء.    
+                    </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                    <Button onClick={handleCloseDeleteModal}>إلغاء</Button>
+                    <Button onClick={handleDeleteButton} color='error' autoFocus>
+                        حذف المهمة
+                    </Button>
+                    </DialogActions>
+                </Dialog>
+            </>
+
+            {/* Edit Modal */}
+            <>
+                
+                <Dialog style={{direction: "rtl"}} open={openEdit} onClose={handleCloseEdit}>
+                    <DialogTitle>تعديل المهمة</DialogTitle>
+                    <DialogContent>
+                    
+                    <form onSubmit={handleSubmitEdit} id="subscription-form">
+                        <TextField
+                        autoFocus
+                        required
+                        margin="dense"
+                        id="title"
+                        name="title"
+                        label="العنوان الرئيسي "
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        value={editedTask.title}
+                        onChange={(e)=>{
+                            setEditedTask({...editedTask, title: e.target.value})
+                        }}
+                        />
+
+                        <TextField
+                        autoFocus
+                        margin="dense"
+                        id="subtitle"
+                        name="subtitle"
+                        label="العنوان الفرعي"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        value={editedTask.subtitle}
+                        onChange={(e)=>{
+                            setEditedTask({...editedTask, subtitle: e.target.value})
+                        }}
+                        />
+                    </form>
+                    </DialogContent>
+                    <DialogActions>
+                    <Button onClick={handleCloseEdit}>إلغاء</Button>
+                    <Button type="submit" form="subscription-form">
+                        حفظ التعديلات
+                    </Button>
+                    </DialogActions>
+                </Dialog>
+            </>
         </>
     )
 }
