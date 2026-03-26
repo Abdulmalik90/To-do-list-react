@@ -36,7 +36,11 @@ export default function Tasks(){
     })
 
     const [tasksCondition, setTasksCondition] = useState("notCompleted");
-    const [open, setOpen] = useState(false);
+    const [tost, setToast] = useState({
+        isOpen: false,
+        text: "",
+        severity: ""
+    })
     const [alignment, setAlignment] = useState('uncompleted');
     const [taskState, setTaskState] = useState({
         title: "",
@@ -55,10 +59,10 @@ export default function Tasks(){
     function addTask(){
 
         if(!taskState.title) {
-            setOpen(true);
+            setToast({isOpen: true, text: " يرجى إدخال عنوان المهمة قبل إضافتها", severity: "warning"});
 
             setTimeout(()=>{
-                setOpen(false);
+                setToast({...tost, isOpen: false});
             }, 5000)
 
             return;
@@ -76,6 +80,16 @@ export default function Tasks(){
             subtitle: "",
             allTasks: newTaskList
         })
+
+        setToast({
+            isOpen: true, 
+            text: " تم إضافة المهمة بنجاح", 
+            severity: "success"
+        });
+
+        setTimeout(()=>{
+            setToast({...tost, isOpen: false});
+        }, 5000)
     }
 
     // check button function
@@ -86,8 +100,26 @@ export default function Tasks(){
             const updatedTasks = prev.allTasks.map((task, i) => {
                 if(i === id){
                     if(task.completed){
+                        setToast({
+                            isOpen: true, 
+                            text: " تم وضع المهمة غير منجزه", 
+                            severity: "warning"
+                        });
+
+                        setTimeout(()=>{
+                            setToast({...tost, isOpen: false});
+                        }, 5000)
                         return {...task, completed: false}
                     } else{
+                        setToast({
+                            isOpen: true, 
+                            text: " تم إنجاز المهمة", 
+                            severity: "success"
+                        });
+
+                        setTimeout(()=>{
+                            setToast({...tost, isOpen: false});
+                        }, 5000)
                         return {...task, completed: true}
                     }
                 } else {
@@ -115,6 +147,17 @@ export default function Tasks(){
                 }
             });
             localStorage.setItem("todos", JSON.stringify(updatedTasks));
+
+            setToast({
+                isOpen: true, 
+                text: " تم تعديل المهمة", 
+                severity: "success"
+            });
+
+            setTimeout(()=>{
+                setToast({...tost, isOpen: false});
+            }, 5000)
+            
             return {
                 ...prev,
                 allTasks: updatedTasks
@@ -157,6 +200,16 @@ export default function Tasks(){
             const updatedTasks = prev.allTasks.filter((task) => task.id !== id);
             
             localStorage.setItem("todos", JSON.stringify(updatedTasks));
+
+            setToast({
+                isOpen: true, 
+                text: " تم حذف المهمة", 
+                severity: "error"
+            });
+
+            setTimeout(()=>{
+                setToast({...tost, isOpen: false});
+            }, 5000)
             
             return {
                 ...prev,
@@ -270,16 +323,16 @@ export default function Tasks(){
 
             </Container>
 
-            {/* Alert */}
-            <Collapse in={open} style={{position: "absolute", bottom: "650px", left: "50%", transform: "translateX(-50%)"}}>
-                <Alert severity='warning'
+            {/* Toast Alert */}
+            <Collapse in={tost.isOpen} style={{position: "absolute", bottom: "650px", left: "50%", transform: "translateX(-50%)"}}>
+                <Alert severity={tost.severity}
                 action={
                     <IconButton
                     aria-label="close"
                     color="inherit"
                     size="small"
                     onClick={() => {
-                        setOpen(false);
+                        setToast({...tost, isOpen: false});
                     }}
                     >
                     <CloseIcon fontSize="inherit" />
@@ -287,7 +340,7 @@ export default function Tasks(){
                 }
                 sx={{ mb: 2 }}
                 >
-                يرجى إدخال عنوان المهمة قبل إضافتها
+                    {tost.text}
                 </Alert>
             </Collapse>
 
